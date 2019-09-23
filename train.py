@@ -27,7 +27,7 @@ plt.switch_backend('agg')
 parser = argparse.ArgumentParser(description='Hyper-parameters for GridDehazeNet')
 parser.add_argument('-learning_rate', help='Set the learning rate', default=1e-3, type=float)
 parser.add_argument('-crop_size', help='Set the crop_size', default=[240, 240], nargs='+', type=int)
-parser.add_argument('-train_batch_size', help='Set the training batch size', default=18, type=int)
+parser.add_argument('-train_batch_size', help='Set the training batch size', default=20, type=int)
 parser.add_argument('-network_height', help='Set the network height (row)', default=3, type=int)
 parser.add_argument('-network_width', help='Set the network width (column)', default=6, type=int)
 parser.add_argument('-num_dense_layer', help='Set the number of dense layer in RDB', default=4, type=int)
@@ -56,8 +56,8 @@ print('learning_rate: {}\ncrop_size: {}\ntrain_batch_size: {}\nval_batch_size: {
 # --- Set category-specific hyper-parameters  --- #
 if category == 'indoor':
     num_epochs = 100
-    train_data_dir = './data/train/indoor/'
-    val_data_dir = './data/test/SOTS/indoor/'
+    train_data_dir = '/A-pool/wangke/dehaze-alg/MyAOD/make_dataset/multi/train'
+    val_data_dir = '/A-pool/wangke/dehaze-alg/MyAOD/make_dataset/valroot'
 elif category == 'outdoor':
     num_epochs = 10
     train_data_dir = './data/train/outdoor/'
@@ -67,7 +67,7 @@ else:
 
 
 # --- Gpu device --- #
-device_ids = [Id for Id in range(torch.cuda.device_count())]
+device_ids = [0,1,3]
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
@@ -108,12 +108,13 @@ print("Total_params: {}".format(pytorch_total_params))
 
 
 # --- Load training data and validation/test data --- #
-train_data_loader = DataLoader(TrainData(crop_size, train_data_dir), batch_size=train_batch_size, shuffle=True, num_workers=24)
-val_data_loader = DataLoader(ValData(val_data_dir), batch_size=val_batch_size, shuffle=False, num_workers=24)
+train_data_loader = DataLoader(TrainData(crop_size, train_data_dir), batch_size=train_batch_size, shuffle=True, num_workers=6)
+val_data_loader = DataLoader(ValData(val_data_dir), batch_size=val_batch_size, shuffle=False, num_workers=6)
 
 
 # --- Previous PSNR and SSIM in testing --- #
-old_val_psnr, old_val_ssim = validation(net, val_data_loader, device, category)
+# old_val_psnr, old_val_ssim = validation(net, val_data_loader, device, category)
+old_val_psnr, old_val_ssim = 0, 0
 print('old_val_psnr: {0:.2f}, old_val_ssim: {1:.4f}'.format(old_val_psnr, old_val_ssim))
 
 for epoch in range(num_epochs):
