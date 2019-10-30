@@ -67,6 +67,7 @@ else:
 
 
 # --- Gpu device --- #
+# device_ids = [Id for Id in range(torch.cuda.device_count())]
 device_ids = [0,1,3]
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 

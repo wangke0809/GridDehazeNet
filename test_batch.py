@@ -54,7 +54,8 @@ else:
 
 
 # --- Gpu device --- #
-device_ids = [Id for Id in range(torch.cuda.device_count())]
+# device_ids = [Id for Id in range(torch.cuda.device_count())]
+device_ids = [2]
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
@@ -83,9 +84,9 @@ transform = transforms.Compose([
 # --- Use the evaluation model in testing --- #
 net.eval()
 
-path = "/A-pool/wangke/test/img_data/data/"
+path = "/A-pool/wangke/dehaze-alg/measure/test_resize/"
 
-dehaze_path = '/A-pool/wangke/dehaze-alg/MyAOD/result/gridnet/'
+dehaze_path = '/A-pool/wangke/dehaze-alg/measure/dehaze/gridDehazeNetOutdoor/'
 
 import os
 
